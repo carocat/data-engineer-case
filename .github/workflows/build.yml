@@ -1,0 +1,36 @@
+name: Build and Test Pipeline  # ✅ This is the correct field for the workflow name
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission to Gradle wrapper
+        run: chmod +x gradlew
+
+      - name: Run ingestion module
+        run: ./gradlew :ingestion:run
+
+      - name: Run validation module
+        run: ./gradlew :validation:run
+
+      - name: Run tests
+        run: ./gradlew test

@@ -1,0 +1,92 @@
+# ========== macOS ==========
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+__MACOSX
+
+# ========== IntelliJ IDEA ==========
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# ========== Kotlin / Java ==========
+*.class
+*.jar
+*.war
+*.ear
+
+# ========== Gradle ==========
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# ========== Logs ==========
+*.log
+
+# ========== System Files ==========
+*.swp
+*.swo
+*.bak
+*~
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# ========== VSCode (if used) ==========
+.vscode/
+
+# ========== Local Environment Files ==========
+.env
+.env.*
+
+# ========== Test Reports ==========
+test-results/
+test-output/
+
+# ========== Spark / Delta Temp Files ==========
+**/_delta_log/
+**/_spark_metadata/
+**/_committed_*
+**/_started_*
+**/_SUCCESS
+**/_logs/
+**/.checkpoint/
+
+# ========== Temporary Output Folders ==========
+data/output/
+tmp/
+
+# ========== Python analytics ==========
+analytics/
+*.ipynb_checkpoints
+**/.ipynb_checkpoints/
+
+# Optional: keep notebooks but ignore outputs
+# Ignore all outputs inside analytics except notebooks
+# Uncomment if needed:
+# analytics/**
+# !analytics/**/*.ipynb
+
+# Ignore common notebook-generated data
+**/*.parquet
+**/*.delta
+**/_delta_log/
+**/_SUCCESS
+**/part-*
+**/*.checkpoint
+**/.spark-staging/
+
+# Optional: ignore cache and Python metadata
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignore validation summary reports
+**/validation_summary.txt
+*.iml
