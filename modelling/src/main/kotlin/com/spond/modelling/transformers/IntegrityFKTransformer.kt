@@ -20,14 +20,13 @@ class IntegrityFKTransformer<T>(
 ) : BaseTransformer(uid) {
 
     // Enforce referential integrity by joining with the parent dataset on the foreign key.
-    // Use broadcast join for performance when the parent dataset is small to improve performance.
-    // Drop the parent key column after the join to avoid duplication and name conflicts.
+    // Only select the parent key column to avoid redundancy or name conflicts.
     override fun doTransform(dataset: Dataset<Row>): Dataset<Row> {
-        val parentCol = parent.col(parentKeyCol)
         val childCol = dataset.col(childKeyCol)
+        val minimalParent = parent.select(parent.col(parentKeyCol))  // Select only key column
 
         return dataset
-            .join(broadcast(parent), childCol.equalTo(parentCol), "inner")
-            .drop(parentCol)
+            .join(broadcast(minimalParent), childCol.equalTo(minimalParent.col(parentKeyCol)))
+            .drop(minimalParent.col(parentKeyCol))
     }
 }

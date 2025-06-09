@@ -76,8 +76,6 @@ analytics/
 # Ignore common notebook-generated data
 **/*.parquet
 **/*.delta
-**/_delta_log/
-**/_SUCCESS
 **/part-*
 **/*.checkpoint
 **/.spark-staging/
@@ -87,6 +85,5 @@ __pycache__/
 *.py[cod]
 *.pyo
 
-# Ignore validation summary reports
-**/validation_summary.txt
-*.iml
+# Ignorar relatórios gerados automaticamente em qualquer módulo
+**/report/*.txt

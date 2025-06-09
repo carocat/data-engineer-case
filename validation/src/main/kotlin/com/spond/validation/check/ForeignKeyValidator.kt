@@ -1,9 +1,9 @@
-package com.spond.validation
+package com.spond.validation.check
 
-import com.spond.common.models.Team
-import com.spond.common.models.Membership
 import com.spond.common.models.Event
 import com.spond.common.models.EventRsvp
+import com.spond.common.models.Membership
+import com.spond.common.models.Team
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Encoders
 

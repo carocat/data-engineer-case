@@ -6,7 +6,8 @@ import com.spond.common.models.EventRsvp
 import com.spond.common.models.Membership
 import com.spond.common.models.Team
 import com.spond.common.spark.SparkSessionManager
-import com.spond.modelling.pipeline.IngestionPipelines
+import com.spond.modelling.pipeline.ModellingPipelines
+import com.spond.modelling.report.ViewReportGenerator
 import com.spond.modelling.views.AnalyticsViews
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Encoders
@@ -44,15 +45,26 @@ object ModellingApp {
             // It's also critical to persist any rows removed by IntegrityFKTransformer (e.g. invalid foreign keys)
             // to a separate debug/audit sink (e.g. Delta table, log file, or monitoring system)
             // to support traceability, data quality reviews, and operational debugging.
-            val transformedMemberships = IngestionPipelines.transformMemberships(memberships, teams)
-            val transformedEvents = IngestionPipelines.transformEvents(events, teams)
-            val transformedEventRsvps = IngestionPipelines.transformEventRsvps(eventRsvps, events, memberships)
+            val transformedMemberships = ModellingPipelines.transformMemberships(memberships, teams)
+            val transformedEvents = ModellingPipelines.transformEvents(events, teams)
+            val transformedEventRsvps = ModellingPipelines.transformEventRsvps(eventRsvps, events, memberships)
 
             AnalyticsViews.createAllViews(
                 teams = teams.toDF(),
                 memberships = transformedMemberships,
                 events = transformedEvents,
                 eventRsvps = transformedEventRsvps
+            )
+
+            // Generate report
+            ViewReportGenerator.generateReport(
+                spark = spark,
+                datasets = mapOf(
+                    "Transformed Teams" to teams.toDF(),
+                    "Transformed Memberships" to transformedMemberships,
+                    "Transformed Events" to transformedEvents,
+                    "Transformed Event RSVPs" to transformedEventRsvps
+                )
             )
 
         }

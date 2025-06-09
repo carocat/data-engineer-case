@@ -5,6 +5,7 @@ import com.spond.common.models.Event
 import com.spond.common.models.EventRsvp
 import com.spond.common.models.Membership
 import com.spond.modelling.transformers.IntegrityFKTransformer
+import com.spond.modelling.transformers.RsvpStatusTransformer
 import org.apache.spark.ml.Pipeline
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Row
@@ -12,7 +13,7 @@ import org.apache.spark.sql.Row
 /**
  * Defines transformation pipelines for each entity ingested into the data lake.
  */
-object IngestionPipelines {
+object ModellingPipelines {
 
 
     //matter of choice to use a pipeline just for one transformer, it is a little verbose indeed
@@ -58,7 +59,8 @@ object IngestionPipelines {
                     parent = memberships,
                     parentKeyCol = "membershipId",
                     childKeyCol = "membershipId",
-                )
+                ),
+                RsvpStatusTransformer()
             )
         )
         return pipeline.fit(df).transform(df)

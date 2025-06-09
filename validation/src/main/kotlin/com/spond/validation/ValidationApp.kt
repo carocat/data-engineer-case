@@ -5,6 +5,10 @@ import com.spond.common.models.EventRsvp
 import com.spond.common.models.Membership
 import com.spond.common.models.Team
 import com.spond.common.spark.SparkSessionManager
+import com.spond.validation.check.ForeignKeyValidator
+import com.spond.validation.check.UniquenessValidator
+import com.spond.validation.report.ValidationReport
+import com.spond.validation.report.ValidationResult
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Encoder
 import org.apache.spark.sql.Encoders
@@ -87,7 +91,7 @@ object ValidationApp {
             }
 
             // Write the summary report to a file
-            ValidationReport.writeSummaryReport(summaryText, "./validation_summary.txt")
+            ValidationReport.writeSummaryReport(summaryText, "report/ValidationReport.txt")
         }
     }
 

@@ -1,12 +1,14 @@
 package com.spond.modelling.views
 
+import com.spond.modelling.transformers.AcceptanceRateTransformer
+import com.spond.modelling.transformers.DaysInRangeTransformer
+import com.spond.modelling.transformers.MemberActivityClassifierTransformer
+import com.spond.modelling.transformers.MemberHostOrUpdateEventTransformer
+import com.spond.modelling.transformers.RsvpSummaryTransformer
+import org.apache.spark.ml.Pipeline
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.functions.col
-import org.apache.spark.sql.functions.countDistinct
-import org.apache.spark.sql.functions.to_date
 
-// Work in progress: placeholder views will be expanded as needed
 object AnalyticsViews {
 
     fun createAllViews(
@@ -21,36 +23,42 @@ object AnalyticsViews {
         createDailyTeamActivityView(events)
         createRsvpSummaryPerEventDayView(eventRsvps)
         createEventAttendanceRateView(eventRsvps)
-        createWeeklyMemberStatusView(memberships)
+        createWeeklyMemberStatusView(memberships, eventRsvps)
+        //TODO missing region view
     }
 
     fun createDailyTeamActivityView(
         events: Dataset<Row>,
-        createdAtCol: String = "createdAt",
-        teamIdCol: String = "teamId",
-        eventIdCol: String = "eventId",
         viewName: String = "vw_daily_team_activity"
     ) {
-        val viewDf = events
-            .withColumn("eventDay", to_date(col(createdAtCol)))
-            .groupBy(col("eventDay"), col(teamIdCol))
-            .agg(countDistinct(col(eventIdCol)).alias("eventsCreated"))
-
-        viewDf.createOrReplaceTempView(viewName)
+        val eventRsvpsTransformed = Pipeline().setStages(
+            arrayOf(
+                DaysInRangeTransformer("createdAt", "createdAt"),
+                MemberHostOrUpdateEventTransformer()
+            )
+        ).fit(events).transform(events)
+        eventRsvpsTransformed.createOrReplaceTempView(viewName)
     }
 
-    fun createRsvpSummaryPerEventDayView(eventRsvps: Dataset<Row>) {
-        // TODO: implement logic
-        println("createRsvpSummaryPerEventDayView placeholder received ${eventRsvps.count()} rows")
+    fun createRsvpSummaryPerEventDayView(
+        eventRsvps: Dataset<Row>,
+        viewName: String = "vw_rsvp_summary_per_event_day"
+    ) {
+        RsvpSummaryTransformer().transform(eventRsvps).createOrReplaceTempView(viewName)
     }
 
-    fun createEventAttendanceRateView(eventRsvps: Dataset<Row>) {
-        // TODO: implement logic
-        println("createEventAttendanceRateView placeholder received ${eventRsvps.count()} rows")
+    fun createEventAttendanceRateView(
+        eventRsvps: Dataset<Row>,
+        viewName: String = "vw_event_attendance_rate"
+    ) {
+        AcceptanceRateTransformer().transform(eventRsvps).createOrReplaceTempView(viewName)
     }
 
-    fun createWeeklyMemberStatusView(memberships: Dataset<Row>) {
-        // TODO: implement logic
-        println("createWeeklyMemberStatusView placeholder received ${memberships.count()} rows")
+    fun createWeeklyMemberStatusView(
+        memberships: Dataset<Row>,
+        eventRsvp: Dataset<Row>,
+        viewName: String = "vw_weekly_member_status"
+    ) {
+        MemberActivityClassifierTransformer(eventRsvp).transform(memberships).createOrReplaceTempView(viewName)
     }
 }

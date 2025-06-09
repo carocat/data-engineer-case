@@ -1,4 +1,4 @@
-package com.spond.validation
+package com.spond.validation.report
 
 import org.apache.spark.sql.Dataset
 import org.slf4j.LoggerFactory

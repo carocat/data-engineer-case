@@ -4,23 +4,19 @@ import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.SaveMode
 import org.apache.spark.sql.SparkSession
+import java.io.File
 
 /**
- * Utility for writing Spark DataFrames in Delta format.
+ * Writes a DataFrame in both Delta and Parquet formats.
  *
- * - If the input DataFrame contains 'year', 'month', and 'day' columns,
- *   it is automatically partitioned by those columns.
- * - Delta is used for all writes to support ACID guarantees and efficient querying.
- * - The Delta table is registered as a temporary view for SQL use.
- *
- * @param df the input DataFrame
- * @param tableName the name to register in Spark SQL
- * @param deltaPath the path where the Delta table should be saved
- * @param spark the active SparkSession
+ * - Delta format goes to the given `deltaPath`.
+ * - Parquet format goes to a sibling folder with `.parquet` suffix.
+ * - Partitions by year/month/day if those columns exist.
+ * - Registers the Delta table as a temp view in Spark.
  */
-object DeltaWriter {
+object DataWriter {
 
-    fun writeAndRegister(
+    fun writeDeltaAndParquet(
         df: Dataset<Row>,
         tableName: String,
         deltaPath: String,
@@ -29,15 +25,23 @@ object DeltaWriter {
         val cols = df.columns().toSet()
         val shouldPartition = cols.contains("year") && cols.contains("month") && cols.contains("day")
 
+        val parquetPath = deltaPath.replaceAfterLast("/", File(deltaPath).nameWithoutExtension + ".parquet")
+
         val deltaWriter = df.write()
             .format("delta")
             .mode(SaveMode.Overwrite)
 
+        val parquetWriter = df.write()
+            .format("parquet")
+            .mode(SaveMode.Overwrite)
+
         if (shouldPartition) {
             deltaWriter.partitionBy("year", "month", "day")
+            parquetWriter.partitionBy("year", "month", "day")
         }
 
         deltaWriter.save(deltaPath)
+        parquetWriter.save(parquetPath)
 
         spark.read()
             .format("delta")

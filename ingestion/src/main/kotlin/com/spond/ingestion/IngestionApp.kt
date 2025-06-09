@@ -1,13 +1,13 @@
 package com.spond.ingestion
 
-import com.spond.common.delta.DeltaWriter
+import com.spond.common.delta.DataWriter
 import com.spond.common.spark.SparkSessionManager
 import com.spond.ingestion.encoding.EventEncode
 import com.spond.ingestion.encoding.EventRsvpEncode
 import com.spond.ingestion.encoding.MembershipEncode
 import com.spond.ingestion.encoding.TeamEncode
 import com.spond.ingestion.pipeline.IngestionPipelines
-import com.spond.ingestion.util.DatasetLogger
+import com.spond.ingestion.report.IngestionReportGenerator
 import com.spond.ingestion.util.DatasetResolver
 
 object IngestionApp {
@@ -44,14 +44,14 @@ object IngestionApp {
             // === Write and register Delta tables ===
 
             // Partitioned writes for teams and memberships (by year/month/day)
-            DeltaWriter.writeAndRegister(
+            DataWriter.writeDeltaAndParquet(
                 df = teamsDs.toDF(),
                 tableName = "teams",
                 deltaPath = "../data/output/teams.delta",
                 spark = spark
             )
 
-            DeltaWriter.writeAndRegister(
+            DataWriter.writeDeltaAndParquet(
                 df = membershipsDs.toDF(),
                 tableName = "memberships",
                 deltaPath = "../data/output/memberships.delta",
@@ -59,25 +59,27 @@ object IngestionApp {
             )
 
             // Non-partitioned writes for events and event_rsvps (partitioning can be added if needed)
-            DeltaWriter.writeAndRegister(
+            DataWriter.writeDeltaAndParquet(
                 df = eventsDs.toDF(),
                 tableName = "events",
                 deltaPath = "../data/output/events.delta",
                 spark = spark
             )
 
-            DeltaWriter.writeAndRegister(
+            DataWriter.writeDeltaAndParquet(
                 df = eventRsvpsDs.toDF(),
                 tableName = "event_rsvps",
                 deltaPath = "../data/output/event_rsvps.delta",
                 spark = spark
             )
 
-            // === Log schemas and sample data for debug and verification ===
-            DatasetLogger.logAndShow(teamsDs, "Teams")
-            DatasetLogger.logAndShow(membershipsDs, "Memberships")
-            DatasetLogger.logAndShow(eventsDs, "Events")
-            DatasetLogger.logAndShow(eventRsvpsDs, "Event RSVPs")
+            // === Write a structured report instead of printing datasets to log ===
+            IngestionReportGenerator.generateReport(
+                teams = teamsDs.toDF(),
+                memberships = membershipsDs.toDF(),
+                events = eventsDs.toDF(),
+                eventRsvps = eventRsvpsDs.toDF()
+            )
         }
     }
 }

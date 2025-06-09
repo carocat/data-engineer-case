@@ -1,6 +1,8 @@
+package com.spond.validation.check
+
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Encoder
-import org.apache.spark.sql.functions.col
+import org.apache.spark.sql.functions
 
 /**
  * Returns rows from the dataset that have duplicate values on the specified primary key columns.
@@ -16,7 +18,7 @@ object UniquenessValidator {
             "❌ Unique key column '$key' not found in dataset."
         }
 
-        val duplicateKeys = df.groupBy(col(key))
+        val duplicateKeys = df.groupBy(functions.col(key))
             .count()
             .filter("count > 1")
             .drop("count")
