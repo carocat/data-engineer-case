@@ -49,8 +49,8 @@ To run the project and generate the analytical views, follow these steps:
 
    ``` ./gradlew :validation:run```
 
-4. Run the Modelling Job: ⚠️ Work in progress: placeholder views will be expanded as needed  
-   This step fixes data inconsistencies and creates analytical views and writes a file **report/view_report.txt**:
+4. Run the Modelling Job: ⚠️ last view with region task was not performed. ⚠️
+This step fixes data inconsistencies and creates analytical views and writes a file **report/modelling_report.txt**:
 
    ``` ./gradlew :modelling:run```
 
