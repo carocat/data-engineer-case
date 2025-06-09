@@ -50,7 +50,6 @@ object ModellingApp {
             val transformedEventRsvps = ModellingPipelines.transformEventRsvps(eventRsvps, events, memberships)
 
             AnalyticsViews.createAllViews(
-                teams = teams.toDF(),
                 memberships = transformedMemberships,
                 events = transformedEvents,
                 eventRsvps = transformedEventRsvps

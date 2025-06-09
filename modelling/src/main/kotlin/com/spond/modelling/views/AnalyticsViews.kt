@@ -12,14 +12,10 @@ import org.apache.spark.sql.Row
 object AnalyticsViews {
 
     fun createAllViews(
-        teams: Dataset<Row>,
         memberships: Dataset<Row>,
         events: Dataset<Row>,
         eventRsvps: Dataset<Row>
     ) {
-        println("createAllViews invoked with:")
-        println("- teams: ${teams.count()} rows")
-
         createDailyTeamActivityView(events)
         createRsvpSummaryPerEventDayView(eventRsvps)
         createEventAttendanceRateView(eventRsvps)
