@@ -54,8 +54,6 @@ To run the project and generate the analytical views, follow these steps:
 
    ``` ./gradlew :modelling:run```
 
-⚠️ In progress ⚠️
-
 ## Bonus Note
 
 This project was proudly built with the help of ChatGPT, which assisted with:
