@@ -12,12 +12,16 @@ import org.apache.spark.sql.Row
 
 /**
  * Defines transformation pipelines for each entity ingested into the data lake.
+ * Each pipeline applies data integrity checks and relevant transformations.
  */
 object ModellingPipelines {
 
 
-    //matter of choice to use a pipeline just for one transformer, it is a little verbose indeed
-    fun transformMemberships(df: Dataset<Membership>, teams: Dataset<Team>): Dataset<Row> {
+    /**
+     * Pipeline to transform Membership dataset.
+     * Applies foreign key integrity validation against Teams dataset.
+     * Using a Pipeline with a single transformer may be verbose but allows future extensibility.
+     */    fun transformMemberships(df: Dataset<Membership>, teams: Dataset<Team>): Dataset<Row> {
         val pipeline = Pipeline().setStages(
             arrayOf(
                 IntegrityFKTransformer(
@@ -30,6 +34,11 @@ object ModellingPipelines {
         return pipeline.fit(df).transform(df)
     }
 
+    /**
+     * Pipeline to transform Events dataset.
+     * Validates foreign key integrity for team references using Teams dataset.
+     * Same design as transformMemberships for consistency and extendibility.
+     */
     fun transformEvents(df: Dataset<Event>, teams: Dataset<Team>): Dataset<Row> {
         val pipeline = Pipeline().setStages(
             arrayOf(
@@ -43,6 +52,11 @@ object ModellingPipelines {
         return pipeline.fit(df).transform(df)
     }
 
+    /**
+     * Pipeline to transform EventRsvp dataset.
+     * Applies multiple integrity checks for eventId and membershipId foreign keys.
+     * Also applies RSVP status transformation for downstream analysis.
+     */
     fun transformEventRsvps(
         df: Dataset<EventRsvp>,
         events: Dataset<Event>,

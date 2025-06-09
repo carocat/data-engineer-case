@@ -26,9 +26,10 @@ It consumes the cleaned and validated datasets from the ingestion process and pr
 - 👁️ **View generation**
     - Curated views are created from the cleaned datasets to represent business-ready information
     - These views include:
-        - `active_members_per_team_view`
-        - `rsvp_rate_per_event_view`
-        - `rsvp_rate_per_team_view`
+        - `vw_daily_team_activity`
+        - `vw_rsvp_summary_per_event_day`
+        - `vw_event_attendance_rate`
+        - `vw_weekly_member_status` 
     - Each view corresponds to a specific analytical query defined in the `queries` package
 
 
