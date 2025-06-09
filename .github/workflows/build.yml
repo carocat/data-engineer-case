@@ -27,6 +27,9 @@ jobs:
       - name: 🔧 Grant execute permission to Gradle wrapper
         run: chmod +x gradlew
 
+      - name: 🏗️ Build all modules
+        run: ./gradlew build
+
       - name: ▶️ Run ingestion module
         run: ./gradlew :ingestion:run
 
@@ -35,6 +38,3 @@ jobs:
 
       - name: ▶️ Run modelling module
         run: ./gradlew :modelling:run
-
-      - name: 🧪 Run all tests
-        run: ./gradlew test
