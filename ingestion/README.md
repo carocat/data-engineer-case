@@ -57,7 +57,8 @@ This will execute the pipeline and generate the following outputs:
   `report/ingestion_report.txt`  
   This file contains sample data and metadata produced during ingestion.
 
-- ✅ Delta Lake folders with the ingested datasets  
+- ✅ Delta Lake and parquet folders with the ingested datasets  
+- Big data tools plugin in Intellij can be used to view parquet datasets
   These are written to your configured output location, partitioned by `year`, `month`, and `day`.
 
 > Note:  

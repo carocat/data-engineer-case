@@ -3,6 +3,7 @@ package com.spond.modelling.report
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.desc
 import org.slf4j.LoggerFactory
 import java.io.File
 
@@ -53,7 +54,9 @@ object ViewReportGenerator {
                         logger.info("Showing sample rows for dataset: $label")
                         val count = ds.count()
                         writer.println("Row count: $count")
-                        val sample = ds.showString(5, 0, false)
+                        val sample = ds
+                            .orderBy(desc("year"), desc("month"), desc("day"))
+                            .showString(10, 0, false)
                         writer.println(sample)
                     } catch (e: Exception) {
                         logger.warn("Failed to show sample rows for dataset: $label", e)

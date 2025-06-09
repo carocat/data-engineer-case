@@ -25,6 +25,9 @@ class IntegrityFKTransformer<T>(
         val childCol = dataset.col(childKeyCol)
         val minimalParent = parent.select(parent.col(parentKeyCol))  // Select only key column
 
+        // Use broadcast join to improve join performance when minimalParent is small enough to fit in memory.
+        // Broadcasting avoids a costly shuffle of the minimalParent dataset across the cluster,
+        // reducing network I/O and speeding up the join operation.
         return dataset
             .join(broadcast(minimalParent), childCol.equalTo(minimalParent.col(parentKeyCol)))
             .drop(minimalParent.col(parentKeyCol))

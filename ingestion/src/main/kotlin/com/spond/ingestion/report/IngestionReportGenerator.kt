@@ -2,6 +2,7 @@ package com.spond.ingestion.report
 
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Row
+import org.apache.spark.sql.functions.desc
 import org.slf4j.LoggerFactory
 import java.io.File
 
@@ -41,7 +42,10 @@ object IngestionReportGenerator {
             writer.println("Schema:")
             writer.println(ds.schema().treeString())
             writer.println("Sample Data:")
-            writer.println(ds.showString(5, 0, false))
+            writer.println(ds
+                .orderBy(desc("year"), desc("month"), desc("day"))
+                .showString(5, 0, false)
+            )
         } catch (e: Exception) {
             writer.println("== $label ==")
             writer.println("⚠️  Failed to process dataset.")

@@ -1,6 +1,7 @@
 package com.spond.validation.report
 
 import org.apache.spark.sql.Dataset
+import org.apache.spark.sql.functions.desc
 import org.slf4j.LoggerFactory
 import java.io.File
 
@@ -19,7 +20,9 @@ object ValidationReport {
             ValidationResult(name, true, 0)
         } else {
             logger.error("❌ [Validation FAILED] $name: $count invalid records found")
-            dataset.show(10, false)
+            dataset
+                .orderBy(desc("year"), desc("month"), desc("day"))
+                .show(10, false)
             ValidationResult(name, false, count)
         }
     }
