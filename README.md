@@ -1,3 +1,92 @@
+
+# Spond Data Engineering Case Solution 🎯
+
+> _Setup requires Java 17 and Gradle._
+
+This is **my version** of the solution for the Spond Data Engineering case.  
+The codebase is organized into the following modules:
+
+- `ingestion`: Handles loading and parsing of input data.
+- `validation`: Performs referential integrity checks and other data quality validations.
+- `modeling`: Prepares analytical models or transformations on validated data.
+- `common`: (Utility module) Includes models and helpers for running pipelines.
+
+### Execution Order
+
+To ensure consistent and correct results, run the modules in the following order:
+
+1. Ingestion
+2. Validation
+3. Modeling
+
+Below you'll find the main instructions to run the project.  
+For more detailed guidance and module-specific usage, please refer to the `README.md` file inside each module directory.
+
+### Tech Stack
+
+- Kotlin with Spark 3.5
+- Delta Lake
+- Built using Gradle
+
+---
+
+## Usage Instructions
+
+To run the project and generate the analytical views, follow these steps:
+
+1. Build the project  
+   From the root directory, run:
+
+   ``` ./gradlew build ```
+
+2. Run the Ingestion Job  
+   This will generate the data files required for validation/modelling. That also generates a file **report/ingestion_report.txt**:
+
+   ``` ./gradlew :ingestion:run```
+
+3. Run the Validation Job  
+   This checks data integrity across tables (e.g., foreign keys, duplicates) and writes a file **report/validation_report.txt**:
+
+   ``` ./gradlew :validation:run```
+
+4. Run the Modelling Job: ⚠️ Work in progress: placeholder views will be expanded as needed  
+   This step fixes data inconsistencies and creates analytical views and writes a file **report/view_report.txt**:
+
+   ``` ./gradlew :modelling:run```
+
+⚠️ In progress ⚠️
+
+## Bonus Note
+
+This project was proudly built with the help of ChatGPT, which assisted with:
+
+- Generating documentation and code comments 🚀
+- Creating test datasets, log file and write 🎩
+- Creating file reports, one of few things chatGPT did well 🤯
+- Keeping me sane and driving me crazy at the same time during debugging 🧠💥
+- Writing readme 💾
+
+👤 Carolina Abs  
+🔗 [LinkedIn](https://www.linkedin.com/in/carolinaabs)
+
+# TODOs
+- [ ] Missing views
+- [ ] Store rejected/ambiguous data separately for auditing
+- [ ] Add region using latitude/longitude in a python module with gadm and geopandas
+
+# 🔧 Improvements Overall
+- [ ] Enable data versioning and historical tracking -> DynamoDB
+- [ ] Add audit logging for job runs and data writes -> DynamoDB
+- [ ] Data quality monitoring -> it can be done by notebooks in a repo
+- [ ] Add unit tests for individual transformers, not all of them. Better tests ofc.
+- [ ] Extract job configurations to a centralized file -> nothing is hardcoded, including column names
+- [ ] Polish code style and structure with `ktlint`
+- [ ] Obviously read tables rather than files, not possible in my current configuration
+- [ ] Spark + Delta Lake Schema Evolution Support
+- [ ] Enable Delta Table Versioning and Time Travel
+- [ ] Add Delta Table Constraints -> ex: team_id IS NOT NULL
+- [ ] Data Lineage Tracking?
+
 # Aim of this coding task
 
 The aim of this coding task is to assess the way you approach problems and design solutions, as well as providing insight into your coding style, expertise and willingness to experiment. It will also provide us with a common ground for a technical interview.
@@ -74,91 +163,4 @@ Create a data model (tables, views, or equivalent) that will support common anal
 * Extra points for test coverage.
 * We encourage you to add a description of improvements to your solution that you think would be natural next steps.
 
-# 
-
-> _Setup requires Java 17 and Gradle._
-
-# Spond Data Engineering Case Solution 🎯
-
-This is **my version** of the solution for the Spond Data Engineering case.  
-The codebase is organized into the following modules:
-
-- `ingestion`: Handles loading and parsing of input data.
-- `validation`: Performs referential integrity checks and other data quality validations.
-- `modeling`: Prepares analytical models or transformations on validated data.
-- `common`: (Utility module) Includes models and helpers for running pipelines.
-
-### Execution Order
-
-To ensure consistent and correct results, run the modules in the following order:
-
-1. Ingestion
-2. Validation
-3. Modeling
-
-Below you'll find the main instructions to run the project.  
-For more detailed guidance and module-specific usage, please refer to the `README.md` file inside each module directory.
-
-### Tech Stack
-
-- Kotlin with Spark 3.5
-- Delta Lake
-- Built using Gradle
-
----
-
-## Usage Instructions
-
-To run the project and generate the analytical views, follow these steps:
-
-1. Build the project  
-   From the root directory, run:
-
-    ``` ./gradlew build ```
-
-2. Run the Ingestion Job  
-   This will generate the data files required for validation/modelling. That also generates a file **report/ingestion_report.txt**:
-
-    ``` ./gradlew :ingestion:run```
-
-3. Run the Validation Job  
-   This checks data integrity across tables (e.g., foreign keys, duplicates) and writes a file **report/validation_report.txt**:
-
-    ``` ./gradlew :validation:run```
-
-4. Run the Modelling Job: ⚠️ Work in progress: placeholder views will be expanded as needed  
-   This step fixes data inconsistencies and creates analytical views and writes a file **report/view_report.txt**:
-
-   ``` ./gradlew :modelling:run```
-
-⚠️ In progress ⚠️
-
-## Bonus Note
-
-This project was proudly built with the help of ChatGPT, which assisted with:
-
-- Generating documentation and code comments
-- Creating test datasets, log file
-- Keeping me sane and driving me crazy at the same time during debugging 🧠💥
-- Writing readme
-
-👤 Carolina Abs  
-🔗 [LinkedIn](https://www.linkedin.com/in/carolinaabs)
-
-# TODOs
-- [ ] Missing views
-- [ ] Store rejected/ambiguous data separately for auditing
-- [ ] Add region using latitude/longitude in a python module with gadm and geopandas
-
-# 🔧 Improvements Overall
-- [ ] Enable data versioning and historical tracking -> DynamoDB
-- [ ] Add audit logging for job runs and data writes -> DynamoDB
-- [ ] Data quality monitoring -> it can be done by notebooks in a repo
-- [ ] Add unit tests for individual transformers, not all of them. Better tests ofc.
-- [ ] Extract job configurations to a centralized file -> nothing is hardcoded, including column names
-- [ ] Polish code style and structure with `ktlint`
-- [ ] Obviously read tables rather than files, not possible in my current configuration
-- [ ] Spark + Delta Lake Schema Evolution Support
-- [ ] Enable Delta Table Versioning and Time Travel
-- [ ] Add Delta Table Constraints -> ex: team_id IS NOT NULL
-- [ ] Data Lineage Tracking?
+#
