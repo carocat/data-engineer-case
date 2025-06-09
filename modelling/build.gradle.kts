@@ -8,7 +8,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("com.spond.validation.ModellingApp")
+    mainClass.set("com.spond.modelling.ModellingApp")
 
     applicationDefaultJvmArgs = listOf(
         "--add-opens", "java.base/javax.security.auth=ALL-UNNAMED",
