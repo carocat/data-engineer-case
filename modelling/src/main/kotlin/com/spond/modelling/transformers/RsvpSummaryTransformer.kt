@@ -18,6 +18,7 @@ class RsvpSummaryTransformer(
     override fun doTransform(dataset: Dataset<Row>): Dataset<Row> {
         return dataset
             .groupBy("eventId", "year", "month", "day")
+            // Aggregate counts of RSVP statuses by conditionally counting rows matching each status
             .agg(
             count(`when`(col(inputCol).equalTo(RsvpStatus.ACCEPTED.name.lowercase()), true)).alias(RsvpStatus.ACCEPTED.name.lowercase()),
             count(`when`(col(inputCol).equalTo(RsvpStatus.DECLINED.name.lowercase()), true)).alias(RsvpStatus.DECLINED.name.lowercase()),
